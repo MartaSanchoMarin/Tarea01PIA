@@ -1,4 +1,9 @@
 from enum import Enum
+import random
+
+#region Variables
+opcionUsuario, opcionOrdenador, resultado = ""
+#endregion Variables
 
 #region Constantes
 StrGanador = "¡Enhorabuena, has ganado!"
@@ -6,6 +11,8 @@ StrPerdedor = "Ha ganado el ordenador, prueba otra vez."
 StrEmpate = "¡Vaya, habéis sacado lo mismo! Prueba otra vez."
 StrEnunciadoInicial = "Bienvenid@ al juego PPT, juega a piedra papel o tijera contra el ordenador. Selecciona 1 para jugar o 2 para salir del juego."
 StrPedirOpcion = "Teclea el número correspondiente a la opción que quieres escoger: Piedra = 1, Papel = 2, Tijera = 3."
+StrErrorInput = "Opción seleccionada incorrecta."
+StrInformativoFinal = f"Has escogido {opcionUsuario}, el ordenador ha escogido {opcionOrdenador}. \n El resultado final es: {resultado}"
 #endregion Constantes
 
 #region Enumerados
@@ -15,12 +22,6 @@ class Opcion(Enum):
     PAPER = 2,
     SCISSOR = 3
 
-#Enumerado con resultados partidas
-class Resultado(Enum):
-    WINNER = 1,
-    LOSER = 2,
-    TIE = 3
-
 #Enumerado de acciones del juego
 class Accion(Enum):
     JUGAR = 1,
@@ -28,31 +29,47 @@ class Accion(Enum):
 #endregion Enumerados
 
 #region Funciones
-def decidir_ganador(user_action, computer_action):
+def decidir_ganador(user_action: Opcion, computer_action: Opcion):
     match user_action:
-    case Opcion.ROCK:
-        if(computer_action == Opcion.ROCK):
-            return Resultado.TIE
-        elif(computer_action == Opcion.PAPER):
-            return Resultado.LOSER
-        else
-            return Resultado.WINNER
-    case Opcion.PAPER:
-        if(computer_action == Opcion.ROCK):
-            return Resultado.WINNER
-        elif(computer_action == Opcion.PAPER):
-            return Resultado.TIE
-        else
-            return Resultado.LOSER
-    case Opcion.SCISSOR:
-        if(computer_action == Opcion.ROCK):
-            return Resultado.LOSER
-        elif(computer_action == Opcion.PAPER):
-            return Resultado.WINNER
-        else
-            return Resultado.TIE   
-
-def menu_acciones_juego()
+        case Opcion.ROCK:
+            if(computer_action == Opcion.ROCK):
+                return StrEmpate
+            elif(computer_action == Opcion.PAPER):
+                return StrPerdedor
+            else:
+                return StrGanador
+        case Opcion.PAPER:
+            if(computer_action == Opcion.ROCK):
+                return StrGanador
+            elif(computer_action == Opcion.PAPER):
+                return StrEmpate
+            else:
+                return StrPerdedor
+        case Opcion.SCISSOR:
+            if(computer_action == Opcion.ROCK):
+                return StrPerdedor
+            elif(computer_action == Opcion.PAPER):
+                return StrGanador
+            else:
+                return StrEmpate  
 #endregion Funciones
 
-def main()
+def main():
+    salir = True
+    while(salir):
+        accionElegida = input(StrEnunciadoInicial)
+        while(accionElegida not in{1,2}):
+            print(StrErrorInput)
+            accionElegida = input(StrEnunciadoInicial)
+        if(accionElegida == 1):
+            opcionUsuario = input(StrPedirOpcion)
+            while(accionElegida not in{1,2,3}):
+                print(StrErrorInput)
+                opcionUsuario = input(StrPedirOpcion)
+            opcionOrdenador = random.choice(Opcion)
+            resultado = decidir_ganador(opcionUsuario, opcionOrdenador)
+            print(StrInformativoFinal, opcionOrdenador, opcionOrdenador, resultado)
+            
+        else:
+            salir = False
+
