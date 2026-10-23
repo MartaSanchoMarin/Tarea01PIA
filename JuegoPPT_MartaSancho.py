@@ -1,23 +1,25 @@
-from enum import StrEnum, Enum
+from enum import Enum
 
 #region Constantes
 StrGanador = "¡Enhorabuena, has ganado!"
 StrPerdedor = "Ha ganado el ordenador, prueba otra vez."
 StrEmpate = "¡Vaya, habéis sacado lo mismo! Prueba otra vez."
+StrEnunciadoInicial = "Bienvenid@ al juego PPT, juega a piedra papel o tijera contra el ordenador. Selecciona 1 para jugar o 2 para salir del juego."
+StrPedirOpcion = "Teclea el número correspondiente a la opción que quieres escoger: Piedra = 1, Papel = 2, Tijera = 3."
 #endregion Constantes
 
 #region Enumerados
 #Enumerado con valores posibles del juego
-class Opcion(StrEnum):
-    ROCK = "Piedra",
-    PAPER = "Papel",
-    SCISSOR = "Tijera"
+class Opcion(Enum):
+    ROCK = 1,
+    PAPER = 2,
+    SCISSOR = 3
 
 #Enumerado con resultados partidas
-class Resultado(StrEnum):
-    WINNER = "Ganador",
-    LOSER = "Perdedor",
-    TIE = "Empate"
+class Resultado(Enum):
+    WINNER = 1,
+    LOSER = 2,
+    TIE = 3
 
 #Enumerado de acciones del juego
 class Accion(Enum):
