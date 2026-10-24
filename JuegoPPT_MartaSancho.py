@@ -2,30 +2,26 @@ from enum import Enum
 import random
 
 #region Variables
-opcionUsuario, opcionOrdenador, resultado = ""
+opcionUsuario, opcionOrdenador, resultado = 0, 0, ""
 #endregion Variables
 
 #region Constantes
-StrGanador = "¡Enhorabuena, has ganado!"
-StrPerdedor = "Ha ganado el ordenador, prueba otra vez."
-StrEmpate = "¡Vaya, habéis sacado lo mismo! Prueba otra vez."
-StrEnunciadoInicial = "Bienvenid@ al juego PPT, juega a piedra papel o tijera contra el ordenador. Selecciona 1 para jugar o 2 para salir del juego."
-StrPedirOpcion = "Teclea el número correspondiente a la opción que quieres escoger: Piedra = 1, Papel = 2, Tijera = 3."
-StrErrorInput = "Opción seleccionada incorrecta."
-StrInformativoFinal = f"Has escogido {opcionUsuario}, el ordenador ha escogido {opcionOrdenador}. \n El resultado final es: {resultado}"
+StrGanador = "¡Enhorabuena, has ganado!\n"
+StrPerdedor = "Ha ganado el ordenador, prueba otra vez.\n"
+StrEmpate = "¡Vaya, habéis sacado lo mismo! Prueba otra vez.\n"
+
+StrPedirOpcionPPT = "Teclea el número correspondiente a la opción que quieres escoger (Piedra = 1, Papel = 2, Tijera = 3) o escribe 'quit' para salir.\n"
+StrErrorInput = "Opción seleccionada incorrecta.\n"
+StrInformativoFinal = "Has escogido {0}, el ordenador ha escogido {1}.\n{2}\n"
+StrSalirJuego = "Has decidido acabar el juego."
 #endregion Constantes
 
 #region Enumerados
 #Enumerado con valores posibles del juego
 class Opcion(Enum):
-    ROCK = 1,
-    PAPER = 2,
+    ROCK = 1
+    PAPER = 2
     SCISSOR = 3
-
-#Enumerado de acciones del juego
-class Accion(Enum):
-    JUGAR = 1,
-    SALIR = 2
 #endregion Enumerados
 
 #region Funciones
@@ -52,24 +48,42 @@ def decidir_ganador(user_action: Opcion, computer_action: Opcion):
                 return StrGanador
             else:
                 return StrEmpate  
+
+def opcionToStringSP(opcionEscogida: Opcion):
+    match opcionEscogida:
+        case Opcion.ROCK:
+                return "Piedra"
+        case Opcion.PAPER:
+                return "Papel"
+        case Opcion.SCISSOR:
+                return "Tijera"  
 #endregion Funciones
 
 def main():
-    salir = True
-    while(salir):
-        accionElegida = input(StrEnunciadoInicial)
-        while(accionElegida not in{1,2}):
+    while(True):
+        #pedimos al usuario la opción y comprobamos qué ha introducido
+        inputUsuario = input(StrPedirOpcionPPT).strip().lower()
+        #si pone quit se acaba el juego
+        if inputUsuario == "quit":
+            print(StrSalirJuego)
+            break
+        #revisamos si el usuario ha introducido un número y si coincide con los que proporcionamos en el enum
+        while not (inputUsuario.isdigit() and int(inputUsuario) in {1, 2, 3}):
+            #si no coincide lo volvemos a pedir
             print(StrErrorInput)
-            accionElegida = input(StrEnunciadoInicial)
-        if(accionElegida == 1):
-            opcionUsuario = input(StrPedirOpcion)
-            while(accionElegida not in{1,2,3}):
-                print(StrErrorInput)
-                opcionUsuario = input(StrPedirOpcion)
-            opcionOrdenador = random.choice(Opcion)
-            resultado = decidir_ganador(opcionUsuario, opcionOrdenador)
-            print(StrInformativoFinal, opcionOrdenador, opcionOrdenador, resultado)
+            inputUsuario = input(StrPedirOpcionPPT).strip().lower()
             
-        else:
-            salir = False
+            if inputUsuario == "quit":
+                print(StrSalirJuego)
+                return
+        opcionUsuario = Opcion(int(inputUsuario))
+        
+        #seleccionamos la opción del ordenador pasandole una lista de las opciones que hay
+        opcionOrdenador = random.choice(list(Opcion))
+        #llamamos a la función que determina quién gana
+        resultado = decidir_ganador(opcionUsuario, opcionOrdenador)
+        #mostramos el resultado
+        print(StrInformativoFinal.format(opcionToStringSP(opcionUsuario), opcionToStringSP(opcionOrdenador), resultado))
 
+if __name__ == "__main__":
+    main()
